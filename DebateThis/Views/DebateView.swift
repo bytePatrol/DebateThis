@@ -9,6 +9,7 @@ struct DebateView: View {
             Divider()
             debatePanes
             commentaryBar
+            coachingOverlay
             Divider()
             judgeArea
         }
@@ -127,6 +128,7 @@ struct DebateView: View {
         case .turnA: return .blue
         case .turnB: return .red
         case .commenting: return .orange
+        case .coaching: return .mint
         case .judging: return .purple
         case .complete: return .green
         case .error: return .red
@@ -331,6 +333,13 @@ struct DebateView: View {
 
             Spacer()
 
+            Toggle(isOn: $engine.speechService.isEnabled) {
+                Image(systemName: engine.speechService.isEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
+            }
+            .toggleStyle(.button)
+            .controlSize(.small)
+            .help(engine.speechService.isEnabled ? "Voice On" : "Voice Off")
+
             Button("Cancel") {
                 engine.cancel()
             }
@@ -478,6 +487,60 @@ struct DebateView: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.small)
+        }
+    }
+
+    // MARK: - Coaching Overlay
+
+    @ViewBuilder
+    private var coachingOverlay: some View {
+        if case .coaching(let round) = engine.state {
+            VStack(spacing: 12) {
+                HStack {
+                    Image(systemName: "megaphone.fill")
+                        .foregroundStyle(.mint)
+                    Text("Coach Your Side — Round \(round)")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+
+                    Spacer()
+
+                    Text("\(engine.coachingTimeRemaining)s")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .monospacedDigit()
+                        .foregroundStyle(engine.coachingTimeRemaining <= 10 ? .red : .secondary)
+                }
+
+                Picker("Coach:", selection: $engine.coachingTarget) {
+                    Text(engine.debate?.modelA.shortName ?? "Model A")
+                        .tag(DebaterSide.forTopic)
+                    Text(engine.debate?.modelB.shortName ?? "Model B")
+                        .tag(DebaterSide.againstTopic)
+                }
+                .pickerStyle(.segmented)
+
+                HStack(spacing: 8) {
+                    TextField("Whisper a strategic hint...", text: $engine.coachingText, axis: .vertical)
+                        .textFieldStyle(.roundedBorder)
+                        .lineLimit(1...3)
+
+                    Button("Send") {
+                        engine.submitCoachingHint()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.mint)
+                    .disabled(engine.coachingText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+                    Button("Skip") {
+                        engine.skipCoaching()
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+            .padding(16)
+            .background(.mint.opacity(0.06))
+            .transition(.opacity.combined(with: .move(edge: .bottom)))
         }
     }
 

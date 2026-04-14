@@ -22,6 +22,8 @@ struct SetupView: View {
                     topicSection
                     modelSection
                     commentarySection
+                    coachingSection
+                    voiceSection
                     startButton
                 }
                 .padding(24)
@@ -226,6 +228,36 @@ struct SetupView: View {
         }
         .padding(12)
         .background(.orange.opacity(0.04), in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var coachingSection: some View {
+        Toggle(isOn: $engine.coachingEnabled) {
+            HStack(spacing: 6) {
+                Image(systemName: "megaphone.fill")
+                    .foregroundStyle(.mint)
+                Text("Audience Coaching")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+            }
+        }
+        .toggleStyle(.switch)
+        .padding(12)
+        .background(.mint.opacity(0.04), in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var voiceSection: some View {
+        Toggle(isOn: $engine.speechService.isEnabled) {
+            HStack(spacing: 6) {
+                Image(systemName: "speaker.wave.2.fill")
+                    .foregroundStyle(.indigo)
+                Text("Voice (Text-to-Speech)")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+            }
+        }
+        .toggleStyle(.switch)
+        .padding(12)
+        .background(.indigo.opacity(0.04), in: RoundedRectangle(cornerRadius: 8))
     }
 
     private func modelPicker(title: String, accent: Color, selection: Binding<String>) -> some View {

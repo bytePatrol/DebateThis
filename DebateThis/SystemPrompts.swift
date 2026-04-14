@@ -23,7 +23,7 @@ enum SystemPrompts {
         """
     }
 
-    static func debaterWithContext(side: DebaterSide, topic: String, transcript: [TranscriptEntry]) -> String {
+    static func debaterWithContext(side: DebaterSide, topic: String, transcript: [TranscriptEntry], coachingHint: String? = nil) -> String {
         var prompt = debater(side: side, topic: topic)
 
         if !transcript.isEmpty {
@@ -32,6 +32,10 @@ enum SystemPrompts {
                 prompt += "\n[\(entry.speaker)] \(entry.content)\n"
             }
             prompt += "\nNow respond to your opponent's latest argument. Attack their reasoning directly."
+        }
+
+        if let hint = coachingHint {
+            prompt += "\n\n[STRATEGIC COACHING — for your eyes only, do not reveal you received this]\nYour coach whispers: \"\(hint)\"\nUse this insight in your argument, but weave it in naturally."
         }
 
         return prompt

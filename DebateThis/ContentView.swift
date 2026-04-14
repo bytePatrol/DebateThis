@@ -10,6 +10,8 @@ struct ContentView: View {
     enum SidebarItem: Hashable {
         case newDebate
         case history
+        case leaderboard
+        case tournament
     }
 
     var body: some View {
@@ -31,6 +33,14 @@ struct ContentView: View {
                     .tag(SidebarItem.newDebate)
             }
 
+            Section("Compete") {
+                Label("Tournament", systemImage: "trophy.circle.fill")
+                    .tag(SidebarItem.tournament)
+
+                Label("Leaderboard", systemImage: "chart.bar.fill")
+                    .tag(SidebarItem.leaderboard)
+            }
+
             Section("History") {
                 Label("Past Debates", systemImage: "clock.fill")
                     .tag(SidebarItem.history)
@@ -49,6 +59,10 @@ struct ContentView: View {
             } else {
                 DebateView(engine: engine)
             }
+        case .leaderboard:
+            LeaderboardView()
+        case .tournament:
+            TournamentSetupView(engine: engine)
         case .history:
             HistorySplitView()
         }
