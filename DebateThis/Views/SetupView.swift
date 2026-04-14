@@ -11,17 +11,7 @@ struct SetupView: View {
     @State private var commentaryEnabled: Bool = true
     @State private var isValidating: Bool = false
     @State private var keyIsValid: Bool? = nil
-
-    private let suggestedTopics = [
-        "Should AI systems be granted legal personhood?",
-        "Is social media a net positive for society?",
-        "Should pineapple go on pizza?",
-        "Is remote work better than in-office work?",
-        "Should college education be free?",
-        "Is space exploration worth the cost?",
-        "Are electric vehicles truly better for the environment?",
-        "Should voting be mandatory?",
-    ]
+    @State private var selectedCategory: String = "tech"
 
     var body: some View {
         VStack(spacing: 0) {
@@ -82,7 +72,7 @@ struct SetupView: View {
     // MARK: - Topic
 
     private var topicSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             Text("DEBATE TOPIC")
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -92,14 +82,34 @@ struct SetupView: View {
                 .textFieldStyle(.roundedBorder)
                 .lineLimit(2...4)
 
+            // Category tabs
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(suggestedTopics, id: \.self) { suggestion in
-                        Button(suggestion) {
-                            topic = suggestion
+                HStack(spacing: 6) {
+                    ForEach(TopicCategories.all) { category in
+                        Button {
+                            selectedCategory = category.id
+                        } label: {
+                            Label(category.name, systemImage: category.icon)
+                                .font(.caption)
                         }
                         .buttonStyle(.bordered)
+                        .tint(selectedCategory == category.id ? .accentColor : .secondary)
                         .controlSize(.small)
+                    }
+                }
+            }
+
+            // Topics for selected category
+            if let category = TopicCategories.all.first(where: { $0.id == selectedCategory }) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(category.topics, id: \.self) { suggestion in
+                            Button(suggestion) {
+                                topic = suggestion
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                        }
                     }
                 }
             }
@@ -187,9 +197,31 @@ struct SetupView: View {
                 }
                 .padding(.leading, 4)
 
-                Text("A third AI provides color commentary after each round, like a sports announcer.")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text("Personality:")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Text(personalityLabel)
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.orange)
+                    }
+
+                    Slider(value: $engine.commentaryPersonality, in: 0...1, step: 0.1)
+                        .controlSize(.small)
+
+                    HStack {
+                        Text("Academic")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                        Spacer()
+                        Text("Sports Broadcaster")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                    }
+                }
             }
         }
         .padding(12)
@@ -233,6 +265,15 @@ struct SetupView: View {
             .disabled(!canStart)
             Spacer()
         }
+    }
+
+    private var personalityLabel: String {
+        let p = engine.commentaryPersonality
+        if p < 0.2 { return "Dry Academic" }
+        if p < 0.4 { return "Measured Analyst" }
+        if p < 0.6 { return "Balanced" }
+        if p < 0.8 { return "Energetic" }
+        return "Full Broadcaster"
     }
 
     private var canStart: Bool {

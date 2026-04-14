@@ -9,13 +9,17 @@
 /* Begin PBXBuildFile section */
 		341539B45D41CE7041F2752A /* SystemPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC0A058F3D4F9F38E21EC0D /* SystemPrompts.swift */; };
 		459D6E850561814D0260FB1C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0078E1AAF78172286B4365 /* ContentView.swift */; };
+		558F32FB7BB9AF6A21530B49 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDC1A4ABD7F44558294FBB4 /* Persistence.swift */; };
 		79687EA38BE2AFA05067F183 /* DebateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324146C69CA53B8667C6105F /* DebateView.swift */; };
 		83F046FD6C670DA0C7196800 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470B302462B957F9573C7BDC /* SetupView.swift */; };
 		851D5D1CD6178E0A9C49F459 /* DebateEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89C26BBBD3D03BC4A6233BC /* DebateEngineTests.swift */; };
 		8851BEC95A2376BFA3907C40 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D3EA862303A21469AC706 /* Models.swift */; };
 		8A65A54227E2B550AC9592CC /* DebateThisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */; };
 		9F295AE520D4DC25570916FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3B4D1C7DCF46188DD0408EC /* Assets.xcassets */; };
+		C00C0EC5AE30D96F1ADD87E6 /* TopicCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE578B1EEE5733184A243CE /* TopicCategories.swift */; };
 		C0F71A6D6290E0B8532600AA /* DebateEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560815747E746C6D53E89BA5 /* DebateEngine.swift */; };
+		EC6317B656DCEAABF730F8DA /* ProviderTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA4884B6371693F0C372765 /* ProviderTheme.swift */; };
+		F8325DE9C75E23764F6B74E2 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556924DED49507360CED6D43 /* HistoryView.swift */; };
 		F8BBEBCFB65AE636B6A9DE98 /* OpenRouterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */; };
 		FEDFAB63FE7F2215FFF004CF /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 3981DC0B977428911CE53513 /* OpenAI */; };
 /* End PBXBuildFile section */
@@ -33,16 +37,20 @@
 /* Begin PBXFileReference section */
 		324146C69CA53B8667C6105F /* DebateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateView.swift; sourceTree = "<group>"; };
 		470B302462B957F9573C7BDC /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		4BE578B1EEE5733184A243CE /* TopicCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCategories.swift; sourceTree = "<group>"; };
+		556924DED49507360CED6D43 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		560815747E746C6D53E89BA5 /* DebateEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateEngine.swift; sourceTree = "<group>"; };
 		5CC0A058F3D4F9F38E21EC0D /* SystemPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemPrompts.swift; sourceTree = "<group>"; };
 		6E4D3EA862303A21469AC706 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		72DE7DF450F752FB102AD467 /* DebateThis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebateThis.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7DDC1A4ABD7F44558294FBB4 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterService.swift; sourceTree = "<group>"; };
 		A3B4D1C7DCF46188DD0408EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A5C43C3042E563AAE3A1D418 /* DebateThis.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DebateThis.entitlements; sourceTree = "<group>"; };
 		A89C26BBBD3D03BC4A6233BC /* DebateEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateEngineTests.swift; sourceTree = "<group>"; };
 		CA0078E1AAF78172286B4365 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateThisApp.swift; sourceTree = "<group>"; };
+		ECA4884B6371693F0C372765 /* ProviderTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderTheme.swift; sourceTree = "<group>"; };
 		F58D88F182EBA08003E2C3A1 /* DebateThisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DebateThisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -76,7 +84,10 @@
 				D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */,
 				6E4D3EA862303A21469AC706 /* Models.swift */,
 				93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */,
+				7DDC1A4ABD7F44558294FBB4 /* Persistence.swift */,
+				ECA4884B6371693F0C372765 /* ProviderTheme.swift */,
 				5CC0A058F3D4F9F38E21EC0D /* SystemPrompts.swift */,
+				4BE578B1EEE5733184A243CE /* TopicCategories.swift */,
 				50ECA526411010413F8A06E7 /* Views */,
 			);
 			path = DebateThis;
@@ -95,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				324146C69CA53B8667C6105F /* DebateView.swift */,
+				556924DED49507360CED6D43 /* HistoryView.swift */,
 				470B302462B957F9573C7BDC /* SetupView.swift */,
 			);
 			path = Views;
@@ -202,10 +214,14 @@
 				C0F71A6D6290E0B8532600AA /* DebateEngine.swift in Sources */,
 				8A65A54227E2B550AC9592CC /* DebateThisApp.swift in Sources */,
 				79687EA38BE2AFA05067F183 /* DebateView.swift in Sources */,
+				F8325DE9C75E23764F6B74E2 /* HistoryView.swift in Sources */,
 				8851BEC95A2376BFA3907C40 /* Models.swift in Sources */,
 				F8BBEBCFB65AE636B6A9DE98 /* OpenRouterService.swift in Sources */,
+				558F32FB7BB9AF6A21530B49 /* Persistence.swift in Sources */,
+				EC6317B656DCEAABF730F8DA /* ProviderTheme.swift in Sources */,
 				83F046FD6C670DA0C7196800 /* SetupView.swift in Sources */,
 				341539B45D41CE7041F2752A /* SystemPrompts.swift in Sources */,
+				C00C0EC5AE30D96F1ADD87E6 /* TopicCategories.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
