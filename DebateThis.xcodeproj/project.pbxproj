@@ -1,0 +1,482 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		341539B45D41CE7041F2752A /* SystemPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC0A058F3D4F9F38E21EC0D /* SystemPrompts.swift */; };
+		459D6E850561814D0260FB1C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0078E1AAF78172286B4365 /* ContentView.swift */; };
+		79687EA38BE2AFA05067F183 /* DebateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324146C69CA53B8667C6105F /* DebateView.swift */; };
+		83F046FD6C670DA0C7196800 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470B302462B957F9573C7BDC /* SetupView.swift */; };
+		851D5D1CD6178E0A9C49F459 /* DebateEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89C26BBBD3D03BC4A6233BC /* DebateEngineTests.swift */; };
+		8851BEC95A2376BFA3907C40 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D3EA862303A21469AC706 /* Models.swift */; };
+		8A65A54227E2B550AC9592CC /* DebateThisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */; };
+		9F295AE520D4DC25570916FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3B4D1C7DCF46188DD0408EC /* Assets.xcassets */; };
+		C0F71A6D6290E0B8532600AA /* DebateEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560815747E746C6D53E89BA5 /* DebateEngine.swift */; };
+		F8BBEBCFB65AE636B6A9DE98 /* OpenRouterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */; };
+		FEDFAB63FE7F2215FFF004CF /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 3981DC0B977428911CE53513 /* OpenAI */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FA08C255A6EB9BB4D886E193 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D3E16170D1CF64C2E63DC3F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BCB9BCF249D1FB04C8B58463;
+			remoteInfo = DebateThis;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		324146C69CA53B8667C6105F /* DebateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateView.swift; sourceTree = "<group>"; };
+		470B302462B957F9573C7BDC /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		560815747E746C6D53E89BA5 /* DebateEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateEngine.swift; sourceTree = "<group>"; };
+		5CC0A058F3D4F9F38E21EC0D /* SystemPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemPrompts.swift; sourceTree = "<group>"; };
+		6E4D3EA862303A21469AC706 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		72DE7DF450F752FB102AD467 /* DebateThis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebateThis.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterService.swift; sourceTree = "<group>"; };
+		A3B4D1C7DCF46188DD0408EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A5C43C3042E563AAE3A1D418 /* DebateThis.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DebateThis.entitlements; sourceTree = "<group>"; };
+		A89C26BBBD3D03BC4A6233BC /* DebateEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateEngineTests.swift; sourceTree = "<group>"; };
+		CA0078E1AAF78172286B4365 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateThisApp.swift; sourceTree = "<group>"; };
+		F58D88F182EBA08003E2C3A1 /* DebateThisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DebateThisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D1E5829478351E8EC6EB79AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEDFAB63FE7F2215FFF004CF /* OpenAI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		063C2B9061787BB6B6AC3202 /* DebateThisTests */ = {
+			isa = PBXGroup;
+			children = (
+				A89C26BBBD3D03BC4A6233BC /* DebateEngineTests.swift */,
+			);
+			path = DebateThisTests;
+			sourceTree = "<group>";
+		};
+		0E3E51DAAF55599743A05CD4 /* DebateThis */ = {
+			isa = PBXGroup;
+			children = (
+				A3B4D1C7DCF46188DD0408EC /* Assets.xcassets */,
+				CA0078E1AAF78172286B4365 /* ContentView.swift */,
+				560815747E746C6D53E89BA5 /* DebateEngine.swift */,
+				A5C43C3042E563AAE3A1D418 /* DebateThis.entitlements */,
+				D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */,
+				6E4D3EA862303A21469AC706 /* Models.swift */,
+				93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */,
+				5CC0A058F3D4F9F38E21EC0D /* SystemPrompts.swift */,
+				50ECA526411010413F8A06E7 /* Views */,
+			);
+			path = DebateThis;
+			sourceTree = "<group>";
+		};
+		4117AB5BBA7E37C42FBF56E1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				72DE7DF450F752FB102AD467 /* DebateThis.app */,
+				F58D88F182EBA08003E2C3A1 /* DebateThisTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50ECA526411010413F8A06E7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				324146C69CA53B8667C6105F /* DebateView.swift */,
+				470B302462B957F9573C7BDC /* SetupView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FBCF122D2EB8B2FF687C1C3A = {
+			isa = PBXGroup;
+			children = (
+				0E3E51DAAF55599743A05CD4 /* DebateThis */,
+				063C2B9061787BB6B6AC3202 /* DebateThisTests */,
+				4117AB5BBA7E37C42FBF56E1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9D985A94B14B411AFE30F065 /* DebateThisTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDA85AFE0A58D6D54B332A01 /* Build configuration list for PBXNativeTarget "DebateThisTests" */;
+			buildPhases = (
+				F1F4D70C00B9B184AE968E8C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3AF40CC97732F957EBC1641C /* PBXTargetDependency */,
+			);
+			name = DebateThisTests;
+			packageProductDependencies = (
+			);
+			productName = DebateThisTests;
+			productReference = F58D88F182EBA08003E2C3A1 /* DebateThisTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		BCB9BCF249D1FB04C8B58463 /* DebateThis */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E838B4F310CB48668421BE9C /* Build configuration list for PBXNativeTarget "DebateThis" */;
+			buildPhases = (
+				A070BB03E8926FD43367FA56 /* Sources */,
+				FA3E845D19E40E293DD390AB /* Resources */,
+				D1E5829478351E8EC6EB79AA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DebateThis;
+			packageProductDependencies = (
+				3981DC0B977428911CE53513 /* OpenAI */,
+			);
+			productName = DebateThis;
+			productReference = 72DE7DF450F752FB102AD467 /* DebateThis.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D3E16170D1CF64C2E63DC3F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = B906CE1ACEC44A10AFA3CBE1 /* Build configuration list for PBXProject "DebateThis" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = FBCF122D2EB8B2FF687C1C3A;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9A20DB9CFDED824E7CD07843 /* XCRemoteSwiftPackageReference "OpenAI" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BCB9BCF249D1FB04C8B58463 /* DebateThis */,
+				9D985A94B14B411AFE30F065 /* DebateThisTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FA3E845D19E40E293DD390AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F295AE520D4DC25570916FF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A070BB03E8926FD43367FA56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				459D6E850561814D0260FB1C /* ContentView.swift in Sources */,
+				C0F71A6D6290E0B8532600AA /* DebateEngine.swift in Sources */,
+				8A65A54227E2B550AC9592CC /* DebateThisApp.swift in Sources */,
+				79687EA38BE2AFA05067F183 /* DebateView.swift in Sources */,
+				8851BEC95A2376BFA3907C40 /* Models.swift in Sources */,
+				F8BBEBCFB65AE636B6A9DE98 /* OpenRouterService.swift in Sources */,
+				83F046FD6C670DA0C7196800 /* SetupView.swift in Sources */,
+				341539B45D41CE7041F2752A /* SystemPrompts.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1F4D70C00B9B184AE968E8C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				851D5D1CD6178E0A9C49F459 /* DebateEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3AF40CC97732F957EBC1641C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BCB9BCF249D1FB04C8B58463 /* DebateThis */;
+			targetProxy = FA08C255A6EB9BB4D886E193 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0C81506F80D89AE4A070D7D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.debatethis.DebateThisTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DebateThis.app/Contents/MacOS/DebateThis";
+			};
+			name = Debug;
+		};
+		361C899C02265B48483D4FA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		6C716FFA8B040F11F5A07FF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.debatethis.DebateThisTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DebateThis.app/Contents/MacOS/DebateThis";
+			};
+			name = Release;
+		};
+		7146AED5D64BC3BA5AEF285F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DebateThis/DebateThis.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DebateThis;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debatethis.app;
+				PRODUCT_NAME = DebateThis;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		8BBF8C81AB8E514C69F1BB91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9295F3F8FB6B0B1C6B92D498 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DebateThis/DebateThis.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DebateThis;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debatethis.app;
+				PRODUCT_NAME = DebateThis;
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B906CE1ACEC44A10AFA3CBE1 /* Build configuration list for PBXProject "DebateThis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BBF8C81AB8E514C69F1BB91 /* Debug */,
+				361C899C02265B48483D4FA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E838B4F310CB48668421BE9C /* Build configuration list for PBXNativeTarget "DebateThis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9295F3F8FB6B0B1C6B92D498 /* Debug */,
+				7146AED5D64BC3BA5AEF285F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EDA85AFE0A58D6D54B332A01 /* Build configuration list for PBXNativeTarget "DebateThisTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C81506F80D89AE4A070D7D4 /* Debug */,
+				6C716FFA8B040F11F5A07FF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9A20DB9CFDED824E7CD07843 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MacPaw/OpenAI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3981DC0B977428911CE53513 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A20DB9CFDED824E7CD07843 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5D3E16170D1CF64C2E63DC3F /* Project object */;
+}

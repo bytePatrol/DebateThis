@@ -1,0 +1,42 @@
+name: DebateThis
+options:
+  bundleIdPrefix: com.debatethis
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  minimumXcodeGenVersion: "2.38.0"
+packages:
+  OpenAI:
+    url: https://github.com/MacPaw/OpenAI
+    from: "0.4.7"
+targets:
+  DebateThis:
+    type: application
+    platform: macOS
+    sources:
+      - DebateThis
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        PRODUCT_BUNDLE_IDENTIFIER: com.debatethis.app
+        PRODUCT_NAME: DebateThis
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.entertainment
+        INFOPLIST_KEY_CFBundleDisplayName: DebateThis
+        SWIFT_STRICT_CONCURRENCY: complete
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - package: OpenAI
+    entitlements:
+      path: DebateThis/DebateThis.entitlements
+  DebateThisTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - DebateThisTests
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: DebateThis
