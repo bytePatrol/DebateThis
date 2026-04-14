@@ -42,14 +42,44 @@ final class DebateEngine {
     var commentaryText: String = ""
     var judgeText: String = ""
 
+    // MARK: - Voice
+
+    var speechService = SpeechService()
+
     // MARK: - Configuration
 
     var commentaryPersonality: Double = 0.7
+    var coachingEnabled: Bool = false
+    var coachingText: String = ""
+    var coachingTarget: DebaterSide = .forTopic
+    var coachingTimeRemaining: Int = 0
+    private var coachingContinuation: CheckedContinuation<CoachingHint?, Never>?
 
     var totalRounds: Int = 3 {
         didSet { totalRounds = max(1, min(totalRounds, maxRounds)) }
     }
     private let maxRounds = 10
+
+    // MARK: - Coaching
+
+    func submitCoachingHint() {
+        guard !coachingText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            skipCoaching()
+            return
+        }
+        let hint = CoachingHint(targetSide: coachingTarget, content: coachingText.trimmingCharacters(in: .whitespacesAndNewlines))
+        coachingContinuation?.resume(returning: hint)
+        coachingContinuation = nil
+    }
+
+    func skipCoaching() {
+        coachingContinuation?.resume(returning: nil)
+        coachingContinuation = nil
+    }
+
+    // MARK: - Callbacks
+
+    var onDebateComplete: ((Debate) -> Void)?
 
     // MARK: - Persistence
 
@@ -150,6 +180,7 @@ final class DebateEngine {
     func cancel() {
         activeTask?.cancel()
         activeTask = nil
+        speechService.stop()
         state = .idle
     }
 
@@ -176,12 +207,17 @@ final class DebateEngine {
             state = .turnA(round: round)
             streamingTextA = ""
 
+            // Check for coaching hint from previous round targeted at Model A
+            let coachHintForA = self.debate?.rounds.last?.coachingHint?.targetSide == .forTopic
+                ? self.debate?.rounds.last?.coachingHint?.content : nil
+
             let transcriptForA = buildTranscript()
             let messagesA = buildMessages(
                 systemPrompt: SystemPrompts.debaterWithContext(
                     side: .forTopic,
                     topic: debate.topic,
-                    transcript: transcriptForA
+                    transcript: transcriptForA,
+                    coachingHint: coachHintForA
                 ),
                 userMessage: round == 1
                     ? "Begin your opening argument FOR the topic."
@@ -194,7 +230,8 @@ final class DebateEngine {
                     service: service,
                     messages: messagesA,
                     model: debate.modelA.id,
-                    writeTo: \.streamingTextA
+                    writeTo: \.streamingTextA,
+                    speechRole: .modelA
                 )
             } catch {
                 if Task.isCancelled { return }
@@ -220,13 +257,19 @@ final class DebateEngine {
 
             // Rebuild transcript including A's just-completed turn
             self.debate?.rounds.append(currentRound)
+
+            // Check for coaching hint targeted at Model B
+            let coachHintForB = self.debate?.rounds.dropLast().last?.coachingHint?.targetSide == .againstTopic
+                ? self.debate?.rounds.dropLast().last?.coachingHint?.content : nil
+
             let transcriptForB = buildTranscript()
 
             let messagesB = buildMessages(
                 systemPrompt: SystemPrompts.debaterWithContext(
                     side: .againstTopic,
                     topic: debate.topic,
-                    transcript: transcriptForB
+                    transcript: transcriptForB,
+                    coachingHint: coachHintForB
                 ),
                 userMessage: round == 1
                     ? "Your opponent has made their opening argument. Argue AGAINST the topic and counter their points."
@@ -239,7 +282,8 @@ final class DebateEngine {
                     service: service,
                     messages: messagesB,
                     model: debate.modelB.id,
-                    writeTo: \.streamingTextB
+                    writeTo: \.streamingTextB,
+                    speechRole: .modelB
                 )
             } catch {
                 if Task.isCancelled { return }
@@ -283,7 +327,8 @@ final class DebateEngine {
                         messages: commentaryMessages,
                         model: commentatorModel.id,
                         maxCompletionTokens: 200,
-                        writeTo: \.commentaryText
+                        writeTo: \.commentaryText,
+                        speechRole: .commentator
                     )
                     // Record commentary on the round
                     if let lastIndex = self.debate.map({ $0.rounds.count - 1 }),
@@ -293,6 +338,36 @@ final class DebateEngine {
                 } catch {
                     if Task.isCancelled { return }
                     // Commentary failure is non-fatal, just skip it
+                }
+
+                guard !Task.isCancelled else { return }
+            }
+
+            // -- Coaching phase (if enabled and not the last round) --
+            if coachingEnabled && round < totalRounds {
+                state = .coaching(round: round)
+                coachingText = ""
+                coachingTimeRemaining = 30
+
+                let hint: CoachingHint? = await withCheckedContinuation { continuation in
+                    self.coachingContinuation = continuation
+                    Task {
+                        for i in stride(from: 30, through: 0, by: -1) {
+                            guard !Task.isCancelled else { return }
+                            if self.coachingContinuation == nil { return }
+                            self.coachingTimeRemaining = i
+                            try? await Task.sleep(for: .seconds(1))
+                        }
+                        self.coachingContinuation?.resume(returning: nil)
+                        self.coachingContinuation = nil
+                    }
+                }
+
+                if let hint {
+                    if let lastIndex = self.debate.map({ $0.rounds.count - 1 }),
+                       lastIndex >= 0 {
+                        self.debate?.rounds[lastIndex].coachingHint = hint
+                    }
                 }
 
                 guard !Task.isCancelled else { return }
@@ -321,7 +396,8 @@ final class DebateEngine {
                 messages: judgeMessages,
                 model: debate.judgeModel.id,
                 maxCompletionTokens: 500,
-                writeTo: \.judgeText
+                writeTo: \.judgeText,
+                speechRole: .judge
             )
             self.debate?.verdict = parseVerdict(from: verdictText, debate: debate)
         } catch {
@@ -332,9 +408,10 @@ final class DebateEngine {
 
         state = .complete
 
-        // Auto-save completed debate
+        // Auto-save completed debate and notify listeners
         if let debate = self.debate {
             saveDebate(debate)
+            onDebateComplete?(debate)
         }
     }
 
@@ -342,6 +419,19 @@ final class DebateEngine {
         guard let modelContext else { return }
         let saved = SavedDebate(from: debate)
         modelContext.insert(saved)
+
+        // Update Elo ratings
+        if let verdict = debate.verdict {
+            let winnerIsA = verdict.winner.id == debate.modelA.id
+            EloService.recordResult(
+                winnerID: winnerIsA ? debate.modelA.id : debate.modelB.id,
+                winnerName: winnerIsA ? debate.modelA.shortName : debate.modelB.shortName,
+                loserID: winnerIsA ? debate.modelB.id : debate.modelA.id,
+                loserName: winnerIsA ? debate.modelB.shortName : debate.modelA.shortName,
+                context: modelContext
+            )
+        }
+
         try? modelContext.save()
     }
 
@@ -353,9 +443,11 @@ final class DebateEngine {
         messages: [ChatQuery.ChatCompletionMessageParam],
         model: String,
         maxCompletionTokens: Int = 800,
-        writeTo keyPath: ReferenceWritableKeyPath<DebateEngine, String>
+        writeTo keyPath: ReferenceWritableKeyPath<DebateEngine, String>,
+        speechRole: SpeechRole? = nil
     ) async throws -> String {
         var accumulated = ""
+        speechService.resetForNewTurn()
         let stream = await service.streamCompletion(
             messages: messages,
             model: model,
@@ -366,6 +458,14 @@ final class DebateEngine {
             guard !Task.isCancelled else { throw CancellationError() }
             accumulated += chunk
             self[keyPath: keyPath] = accumulated
+
+            if let role = speechRole {
+                speechService.feedStreamingText(accumulated, role: role)
+            }
+        }
+
+        if let role = speechRole {
+            speechService.flushRemaining(role: role)
         }
 
         return accumulated

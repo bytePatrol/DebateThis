@@ -7,18 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		229C253A1F6CC33AFE4E8915 /* TournamentEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EBD55E3A26AFCD861A4F02 /* TournamentEngine.swift */; };
 		341539B45D41CE7041F2752A /* SystemPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC0A058F3D4F9F38E21EC0D /* SystemPrompts.swift */; };
 		459D6E850561814D0260FB1C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0078E1AAF78172286B4365 /* ContentView.swift */; };
 		558F32FB7BB9AF6A21530B49 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDC1A4ABD7F44558294FBB4 /* Persistence.swift */; };
+		7893C8951D7D330D662F912F /* TournamentBracketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA8401521203BB7CDC7373A /* TournamentBracketView.swift */; };
 		79687EA38BE2AFA05067F183 /* DebateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324146C69CA53B8667C6105F /* DebateView.swift */; };
+		7DCA95392671D15AFFDD88E2 /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64D0EDC354D77CE29BD6CCD /* LeaderboardView.swift */; };
 		83F046FD6C670DA0C7196800 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470B302462B957F9573C7BDC /* SetupView.swift */; };
 		851D5D1CD6178E0A9C49F459 /* DebateEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89C26BBBD3D03BC4A6233BC /* DebateEngineTests.swift */; };
 		8851BEC95A2376BFA3907C40 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D3EA862303A21469AC706 /* Models.swift */; };
 		8A65A54227E2B550AC9592CC /* DebateThisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */; };
 		9F295AE520D4DC25570916FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3B4D1C7DCF46188DD0408EC /* Assets.xcassets */; };
+		BB859B4680E4842D15FD83CC /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF15C46142069ECB3379887A /* SpeechService.swift */; };
 		C00C0EC5AE30D96F1ADD87E6 /* TopicCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE578B1EEE5733184A243CE /* TopicCategories.swift */; };
 		C0F71A6D6290E0B8532600AA /* DebateEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560815747E746C6D53E89BA5 /* DebateEngine.swift */; };
+		DA1CB87BF461DB357E604BA3 /* TournamentSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8194CEF9390399551337DE39 /* TournamentSetupView.swift */; };
 		EC6317B656DCEAABF730F8DA /* ProviderTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA4884B6371693F0C372765 /* ProviderTheme.swift */; };
+		EE6FAFB58C863AAF135DD121 /* EloService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DBFF340A892F6BAA3FCE0F5 /* EloService.swift */; };
 		F8325DE9C75E23764F6B74E2 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556924DED49507360CED6D43 /* HistoryView.swift */; };
 		F8BBEBCFB65AE636B6A9DE98 /* OpenRouterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */; };
 		FEDFAB63FE7F2215FFF004CF /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 3981DC0B977428911CE53513 /* OpenAI */; };
@@ -35,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0DBFF340A892F6BAA3FCE0F5 /* EloService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EloService.swift; sourceTree = "<group>"; };
+		25EBD55E3A26AFCD861A4F02 /* TournamentEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentEngine.swift; sourceTree = "<group>"; };
 		324146C69CA53B8667C6105F /* DebateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateView.swift; sourceTree = "<group>"; };
 		470B302462B957F9573C7BDC /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		4BE578B1EEE5733184A243CE /* TopicCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCategories.swift; sourceTree = "<group>"; };
@@ -44,14 +52,18 @@
 		6E4D3EA862303A21469AC706 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		72DE7DF450F752FB102AD467 /* DebateThis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebateThis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DDC1A4ABD7F44558294FBB4 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		8194CEF9390399551337DE39 /* TournamentSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentSetupView.swift; sourceTree = "<group>"; };
 		93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterService.swift; sourceTree = "<group>"; };
 		A3B4D1C7DCF46188DD0408EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A5C43C3042E563AAE3A1D418 /* DebateThis.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DebateThis.entitlements; sourceTree = "<group>"; };
+		A64D0EDC354D77CE29BD6CCD /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
 		A89C26BBBD3D03BC4A6233BC /* DebateEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateEngineTests.swift; sourceTree = "<group>"; };
 		CA0078E1AAF78172286B4365 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebateThisApp.swift; sourceTree = "<group>"; };
+		DFA8401521203BB7CDC7373A /* TournamentBracketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentBracketView.swift; sourceTree = "<group>"; };
 		ECA4884B6371693F0C372765 /* ProviderTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderTheme.swift; sourceTree = "<group>"; };
 		F58D88F182EBA08003E2C3A1 /* DebateThisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DebateThisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF15C46142069ECB3379887A /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,12 +94,15 @@
 				560815747E746C6D53E89BA5 /* DebateEngine.swift */,
 				A5C43C3042E563AAE3A1D418 /* DebateThis.entitlements */,
 				D8BE1F43F6FEE6CE8CA2440B /* DebateThisApp.swift */,
+				0DBFF340A892F6BAA3FCE0F5 /* EloService.swift */,
 				6E4D3EA862303A21469AC706 /* Models.swift */,
 				93158F3BA30F2D4B6C8F1DB4 /* OpenRouterService.swift */,
 				7DDC1A4ABD7F44558294FBB4 /* Persistence.swift */,
 				ECA4884B6371693F0C372765 /* ProviderTheme.swift */,
+				FF15C46142069ECB3379887A /* SpeechService.swift */,
 				5CC0A058F3D4F9F38E21EC0D /* SystemPrompts.swift */,
 				4BE578B1EEE5733184A243CE /* TopicCategories.swift */,
+				25EBD55E3A26AFCD861A4F02 /* TournamentEngine.swift */,
 				50ECA526411010413F8A06E7 /* Views */,
 			);
 			path = DebateThis;
@@ -107,7 +122,10 @@
 			children = (
 				324146C69CA53B8667C6105F /* DebateView.swift */,
 				556924DED49507360CED6D43 /* HistoryView.swift */,
+				A64D0EDC354D77CE29BD6CCD /* LeaderboardView.swift */,
 				470B302462B957F9573C7BDC /* SetupView.swift */,
+				DFA8401521203BB7CDC7373A /* TournamentBracketView.swift */,
+				8194CEF9390399551337DE39 /* TournamentSetupView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -214,14 +232,20 @@
 				C0F71A6D6290E0B8532600AA /* DebateEngine.swift in Sources */,
 				8A65A54227E2B550AC9592CC /* DebateThisApp.swift in Sources */,
 				79687EA38BE2AFA05067F183 /* DebateView.swift in Sources */,
+				EE6FAFB58C863AAF135DD121 /* EloService.swift in Sources */,
 				F8325DE9C75E23764F6B74E2 /* HistoryView.swift in Sources */,
+				7DCA95392671D15AFFDD88E2 /* LeaderboardView.swift in Sources */,
 				8851BEC95A2376BFA3907C40 /* Models.swift in Sources */,
 				F8BBEBCFB65AE636B6A9DE98 /* OpenRouterService.swift in Sources */,
 				558F32FB7BB9AF6A21530B49 /* Persistence.swift in Sources */,
 				EC6317B656DCEAABF730F8DA /* ProviderTheme.swift in Sources */,
 				83F046FD6C670DA0C7196800 /* SetupView.swift in Sources */,
+				BB859B4680E4842D15FD83CC /* SpeechService.swift in Sources */,
 				341539B45D41CE7041F2752A /* SystemPrompts.swift in Sources */,
 				C00C0EC5AE30D96F1ADD87E6 /* TopicCategories.swift in Sources */,
+				7893C8951D7D330D662F912F /* TournamentBracketView.swift in Sources */,
+				229C253A1F6CC33AFE4E8915 /* TournamentEngine.swift in Sources */,
+				DA1CB87BF461DB357E604BA3 /* TournamentSetupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

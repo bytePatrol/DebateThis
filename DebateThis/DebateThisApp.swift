@@ -9,6 +9,6 @@ struct DebateThisApp: App {
         }
         .windowStyle(.titleBar)
         .defaultSize(width: 1100, height: 750)
-        .modelContainer(for: [SavedDebate.self, SavedRound.self])
+        .modelContainer(for: [SavedDebate.self, SavedRound.self, ModelRating.self])
     }
 }

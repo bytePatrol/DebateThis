@@ -53,11 +53,17 @@ struct DebateRound: Identifiable {
     var turnA: Turn?
     var turnB: Turn?
     var commentary: String?
+    var coachingHint: CoachingHint?
 
     init(number: Int) {
         self.id = UUID()
         self.number = number
     }
+}
+
+struct CoachingHint {
+    let targetSide: DebaterSide
+    let content: String
 }
 
 struct Turn: Identifiable {
@@ -126,6 +132,7 @@ enum DebateState: Equatable {
     case turnA(round: Int)
     case turnB(round: Int)
     case commenting(round: Int)
+    case coaching(round: Int)
     case judging
     case complete
     case error(message: String)
@@ -141,7 +148,7 @@ enum DebateState: Equatable {
 
     var currentRound: Int? {
         switch self {
-        case .turnA(let r), .turnB(let r), .commenting(let r):
+        case .turnA(let r), .turnB(let r), .commenting(let r), .coaching(let r):
             return r
         default:
             return nil
@@ -158,6 +165,8 @@ enum DebateState: Equatable {
             return "Round \(round) — Model B responding"
         case .commenting(let round):
             return "Round \(round) — Commentary"
+        case .coaching(let round):
+            return "Round \(round) — Coach your side!"
         case .judging:
             return "Judge deliberating..."
         case .complete:
