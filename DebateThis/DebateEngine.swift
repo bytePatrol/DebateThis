@@ -38,6 +38,7 @@ final class DebateEngine {
     var debate: Debate?
     var streamingTextA: String = ""
     var streamingTextB: String = ""
+    var commentaryText: String = ""
     var judgeText: String = ""
 
     // MARK: - Configuration
@@ -56,6 +57,27 @@ final class DebateEngine {
 
     func configure(apiKey: String) {
         self.service = OpenRouterService(apiKey: apiKey)
+    }
+
+    // MARK: - Model Fetching
+
+    var availableModels: [ModelIdentifier] = AvailableModels.all
+    var isLoadingModels: Bool = false
+
+    func fetchModels() {
+        guard let service else { return }
+        isLoadingModels = true
+        Task {
+            do {
+                let models = try await service.fetchModels()
+                if !models.isEmpty {
+                    self.availableModels = models
+                }
+            } catch {
+                // Keep hardcoded fallback on failure
+            }
+            self.isLoadingModels = false
+        }
     }
 
     // MARK: - Pre-flight Checks
@@ -89,7 +111,7 @@ final class DebateEngine {
 
     // MARK: - Start Debate
 
-    func startDebate(topic: String, modelA: ModelIdentifier, modelB: ModelIdentifier, judgeModel: ModelIdentifier) {
+    func startDebate(topic: String, modelA: ModelIdentifier, modelB: ModelIdentifier, judgeModel: ModelIdentifier, commentatorModel: ModelIdentifier? = nil) {
         // Cancel any in-flight debate before starting a new one
         activeTask?.cancel()
         activeTask = nil
@@ -104,9 +126,10 @@ final class DebateEngine {
             return
         }
 
-        debate = Debate(topic: topic, modelA: modelA, modelB: modelB, judgeModel: judgeModel)
+        debate = Debate(topic: topic, modelA: modelA, modelB: modelB, judgeModel: judgeModel, commentatorModel: commentatorModel)
         streamingTextA = ""
         streamingTextB = ""
+        commentaryText = ""
         judgeText = ""
 
         activeTask = Task { [weak self] in
@@ -130,6 +153,7 @@ final class DebateEngine {
         debate = nil
         streamingTextA = ""
         streamingTextB = ""
+        commentaryText = ""
         judgeText = ""
     }
 
@@ -229,6 +253,43 @@ final class DebateEngine {
 
             guard !Task.isCancelled else { return }
 
+            // -- Commentary phase (if commentator model selected) --
+            if let commentatorModel = debate.commentatorModel {
+                state = .commenting(round: round)
+                commentaryText = ""
+
+                // Build transcript for just this round
+                let roundTranscript = buildRoundTranscript(round: round)
+                let commentaryMessages = buildMessages(
+                    systemPrompt: SystemPrompts.commentator(
+                        topic: debate.topic,
+                        round: round,
+                        transcript: roundTranscript
+                    ),
+                    userMessage: "Deliver your commentary on this round."
+                )
+
+                do {
+                    let commentary = try await streamResponse(
+                        service: service,
+                        messages: commentaryMessages,
+                        model: commentatorModel.id,
+                        maxCompletionTokens: 200,
+                        writeTo: \.commentaryText
+                    )
+                    // Record commentary on the round
+                    if let lastIndex = self.debate.map({ $0.rounds.count - 1 }),
+                       lastIndex >= 0 {
+                        self.debate?.rounds[lastIndex].commentary = commentary
+                    }
+                } catch {
+                    if Task.isCancelled { return }
+                    // Commentary failure is non-fatal, just skip it
+                }
+
+                guard !Task.isCancelled else { return }
+            }
+
             // Pause between rounds
             if round < totalRounds {
                 try? await Task.sleep(for: .seconds(1))
@@ -316,6 +377,28 @@ final class DebateEngine {
             if let turnB = round.turnB {
                 entries.append(TranscriptEntry(speaker: speakerB, content: turnB.content))
             }
+        }
+        return entries
+    }
+
+    /// Build transcript for a specific round only (used for commentary).
+    private func buildRoundTranscript(round: Int) -> [TranscriptEntry] {
+        guard let debate,
+              let debateRound = debate.rounds.first(where: { $0.number == round }) else {
+            return []
+        }
+        var entries: [TranscriptEntry] = []
+        if let turnA = debateRound.turnA {
+            entries.append(TranscriptEntry(
+                speaker: "\(debate.modelA.shortName) (FOR)",
+                content: turnA.content
+            ))
+        }
+        if let turnB = debateRound.turnB {
+            entries.append(TranscriptEntry(
+                speaker: "\(debate.modelB.shortName) (AGAINST)",
+                content: turnB.content
+            ))
         }
         return entries
     }

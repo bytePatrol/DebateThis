@@ -73,6 +73,30 @@ enum SystemPrompts {
 
         return prompt
     }
+
+    static func commentator(topic: String, round: Int, transcript: [TranscriptEntry]) -> String {
+        var prompt = """
+        You are a sharp, witty sports-style color commentator for an AI debate. The topic is:
+
+        "\(topic)"
+
+        This is Round \(round). Analyze what just happened like a play-by-play announcer. Be:
+        - Specific: name the exact arguments and rhetorical moves each side made
+        - Opinionated: say who had the stronger round and why
+        - Entertaining: use sports/debate metaphors, be energetic but not corny
+        - Brief: 2-3 sentences max. This is commentary, not an essay.
+
+        Do not use phrases like "as an AI" or reference being a language model.
+
+        Round \(round) transcript:
+        """
+
+        for entry in transcript {
+            prompt += "\n\n[\(entry.speaker)] \(entry.content)"
+        }
+
+        return prompt
+    }
 }
 
 // MARK: - Supporting Types
