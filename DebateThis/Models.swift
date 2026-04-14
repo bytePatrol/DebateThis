@@ -21,6 +21,7 @@ struct Debate: Identifiable {
     let modelA: ModelIdentifier
     let modelB: ModelIdentifier
     let judgeModel: ModelIdentifier
+    let commentatorModel: ModelIdentifier?
     var rounds: [DebateRound]
     var verdict: Verdict?
     let createdAt: Date
@@ -29,13 +30,15 @@ struct Debate: Identifiable {
         topic: String,
         modelA: ModelIdentifier,
         modelB: ModelIdentifier,
-        judgeModel: ModelIdentifier
+        judgeModel: ModelIdentifier,
+        commentatorModel: ModelIdentifier? = nil
     ) {
         self.id = UUID()
         self.topic = topic
         self.modelA = modelA
         self.modelB = modelB
         self.judgeModel = judgeModel
+        self.commentatorModel = commentatorModel
         self.rounds = []
         self.verdict = nil
         self.createdAt = Date()
@@ -49,6 +52,7 @@ struct DebateRound: Identifiable {
     let number: Int
     var turnA: Turn?
     var turnB: Turn?
+    var commentary: String?
 
     init(number: Int) {
         self.id = UUID()
@@ -103,9 +107,12 @@ struct VerdictScores {
 //   turnB(round: 1)
 //    |
 //    v
+//   commenting(round: 1)
+//    |
+//    v
 //   turnA(round: 2) ... (repeat for N rounds)
 //    |
-//    v (final round turnB complete)
+//    v (final round commenting complete)
 //   judging
 //    |
 //    v
@@ -118,16 +125,26 @@ enum DebateState: Equatable {
     case idle
     case turnA(round: Int)
     case turnB(round: Int)
+    case commenting(round: Int)
     case judging
     case complete
     case error(message: String)
 
     var isActive: Bool {
         switch self {
-        case .turnA, .turnB, .judging:
+        case .turnA, .turnB, .commenting, .judging:
             return true
         default:
             return false
+        }
+    }
+
+    var currentRound: Int? {
+        switch self {
+        case .turnA(let r), .turnB(let r), .commenting(let r):
+            return r
+        default:
+            return nil
         }
     }
 
@@ -139,6 +156,8 @@ enum DebateState: Equatable {
             return "Round \(round) — Model A arguing"
         case .turnB(let round):
             return "Round \(round) — Model B responding"
+        case .commenting(let round):
+            return "Round \(round) — Commentary"
         case .judging:
             return "Judge deliberating..."
         case .complete:

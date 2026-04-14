@@ -63,6 +63,20 @@ actor OpenRouterService {
         }
     }
 
+    // MARK: - Fetch Available Models
+
+    func fetchModels() async throws -> [ModelIdentifier] {
+        let result = try await client.models()
+        return result.data
+            .map { model in
+                ModelIdentifier(
+                    id: model.id,
+                    displayName: model.id.components(separatedBy: "/").last?.replacingOccurrences(of: "-", with: " ").capitalized ?? model.id,
+                    provider: model.id.components(separatedBy: "/").first?.capitalized ?? "Unknown"
+                )
+            }
+            .sorted { $0.provider < $1.provider }
+    }
 }
 
 // MARK: - Errors

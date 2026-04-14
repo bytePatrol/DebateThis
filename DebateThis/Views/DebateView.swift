@@ -5,17 +5,11 @@ struct DebateView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top: topic + status
             topicBar
-
             Divider()
-
-            // Middle: debate panes
             debatePanes
-
+            commentaryBar
             Divider()
-
-            // Bottom: judge area
             judgeArea
         }
     }
@@ -23,11 +17,32 @@ struct DebateView: View {
     // MARK: - Topic Bar
 
     private var topicBar: some View {
-        VStack(spacing: 4) {
-            Text("DEBATE")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .tracking(2)
+        VStack(spacing: 6) {
+            HStack(spacing: 12) {
+                nameplate(
+                    model: engine.debate?.modelA,
+                    side: "FOR",
+                    accent: .blue
+                )
+
+                Spacer()
+
+                VStack(spacing: 2) {
+                    Text("DEBATE")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .tracking(2)
+                    statusPill
+                }
+
+                Spacer()
+
+                nameplate(
+                    model: engine.debate?.modelB,
+                    side: "AGAINST",
+                    accent: .red
+                )
+            }
 
             Text(engine.debate?.topic ?? "")
                 .font(.title3)
@@ -35,37 +50,95 @@ struct DebateView: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
 
-            statusPill
+            roundIndicator
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 24)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 20)
         .frame(maxWidth: .infinity)
         .background(.bar)
+    }
+
+    private func nameplate(model: ModelIdentifier?, side: String, accent: Color) -> some View {
+        HStack(spacing: 8) {
+            RoundedRectangle(cornerRadius: 4)
+                .fill(accent.gradient)
+                .frame(width: 4, height: 32)
+
+            VStack(alignment: side == "FOR" ? .leading : .trailing, spacing: 1) {
+                Text(model?.shortName ?? "")
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+
+                Text(side)
+                    .font(.caption2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(accent)
+                    .tracking(1)
+            }
+        }
+    }
+
+    private var roundIndicator: some View {
+        HStack(spacing: 4) {
+            if let total = Optional(engine.totalRounds) {
+                ForEach(1...total, id: \.self) { round in
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(roundColor(for: round))
+                        .frame(width: roundWidth(for: round), height: 4)
+                        .animation(.easeInOut(duration: 0.3), value: engine.state)
+                }
+            }
+        }
+    }
+
+    private func roundColor(for round: Int) -> Color {
+        guard let current = engine.state.currentRound else {
+            if case .judging = engine.state { return .purple.opacity(0.6) }
+            if case .complete = engine.state { return .green.opacity(0.6) }
+            return .gray.opacity(0.2)
+        }
+        if round < current { return .primary.opacity(0.3) }
+        if round == current { return .accentColor }
+        return .gray.opacity(0.2)
+    }
+
+    private func roundWidth(for round: Int) -> CGFloat {
+        guard let current = engine.state.currentRound else { return 24 }
+        return round == current ? 40 : 24
     }
 
     private var statusPill: some View {
         HStack(spacing: 6) {
             if engine.state.isActive {
-                ProgressView()
-                    .controlSize(.mini)
+                PulsingDot(color: statusColor)
             }
 
             Text(engine.state.displayText)
                 .font(.caption)
                 .fontWeight(.medium)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 4)
-        .background(.quaternary, in: Capsule())
+        .padding(.horizontal, 10)
+        .padding(.vertical, 3)
+        .background(statusColor.opacity(0.1), in: Capsule())
+    }
+
+    private var statusColor: Color {
+        switch engine.state {
+        case .turnA: return .blue
+        case .turnB: return .red
+        case .commenting: return .orange
+        case .judging: return .purple
+        case .complete: return .green
+        case .error: return .red
+        case .idle: return .secondary
+        }
     }
 
     // MARK: - Debate Panes
 
     private var debatePanes: some View {
         HStack(spacing: 0) {
-            // Model A (left, blue)
             debatePane(
-                model: engine.debate?.modelA,
                 side: "FOR",
                 accent: .blue,
                 streamingText: engine.streamingTextA,
@@ -74,23 +147,11 @@ struct DebateView: View {
                 isStreaming: isModelAStreaming
             )
 
-            // Center divider
-            VStack {
-                Spacer()
-                Text("VS")
-                    .font(.headline)
-                    .fontWeight(.black)
-                    .foregroundStyle(.tertiary)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
-                    .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
-                Spacer()
-            }
-            .frame(width: 60)
+            Rectangle()
+                .fill(.quaternary)
+                .frame(width: 1)
 
-            // Model B (right, red)
             debatePane(
-                model: engine.debate?.modelB,
                 side: "AGAINST",
                 accent: .red,
                 streamingText: engine.streamingTextB,
@@ -103,7 +164,6 @@ struct DebateView: View {
     }
 
     private func debatePane(
-        model: ModelIdentifier?,
         side: String,
         accent: Color,
         streamingText: String,
@@ -111,59 +171,31 @@ struct DebateView: View {
         turnKeyPath: KeyPath<DebateRound, Turn?>,
         isStreaming: Bool
     ) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Nameplate
-            HStack(spacing: 8) {
-                Circle()
-                    .fill(accent.gradient)
-                    .frame(width: 10, height: 10)
-
-                Text(model?.shortName ?? "")
-                    .font(.caption)
-                    .fontWeight(.bold)
-
-                Text("(\(side))")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(accent.opacity(0.08))
-
-            Divider()
-
-            // Content
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        // Completed rounds
-                        ForEach(rounds) { round in
-                            if let turn = round[keyPath: turnKeyPath] {
-                                roundBlock(
-                                    round: round.number,
-                                    content: turn.content,
-                                    accent: accent
-                                )
-                            }
-                        }
-
-                        // Currently streaming
-                        if isStreaming && !streamingText.isEmpty {
-                            streamingBlock(
-                                content: streamingText,
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    ForEach(rounds) { round in
+                        if let turn = round[keyPath: turnKeyPath] {
+                            roundBlock(
+                                round: round.number,
+                                content: turn.content,
                                 accent: accent
                             )
-                            .id("streaming")
+                            .transition(.opacity.combined(with: .move(edge: .bottom)))
                         }
                     }
-                    .padding(16)
-                }
-                .onChange(of: streamingText) { _, _ in
-                    withAnimation(.easeOut(duration: 0.1)) {
-                        proxy.scrollTo("streaming", anchor: .bottom)
+
+                    if isStreaming && !streamingText.isEmpty {
+                        streamingBlock(content: streamingText, accent: accent)
+                            .id("streaming-\(side)")
                     }
+                }
+                .padding(16)
+                .animation(.easeOut(duration: 0.3), value: rounds.count)
+            }
+            .onChange(of: streamingText) { _, _ in
+                withAnimation(.easeOut(duration: 0.1)) {
+                    proxy.scrollTo("streaming-\(side)", anchor: .bottom)
                 }
             }
         }
@@ -194,7 +226,7 @@ struct DebateView: View {
                     .foregroundStyle(accent)
                     .tracking(1)
 
-                streamingIndicator(accent: accent)
+                StreamingDots(color: accent)
             }
 
             Text(content)
@@ -204,21 +236,65 @@ struct DebateView: View {
         }
     }
 
-    private func streamingIndicator(accent: Color) -> some View {
-        HStack(spacing: 3) {
-            ForEach(0..<3) { i in
-                Circle()
-                    .fill(accent)
-                    .frame(width: 4, height: 4)
-                    .opacity(0.6)
-                    .animation(
-                        .easeInOut(duration: 0.6)
-                            .repeatForever()
-                            .delay(Double(i) * 0.2),
-                        value: engine.state
-                    )
+    // MARK: - Commentary Bar
+
+    @ViewBuilder
+    private var commentaryBar: some View {
+        if engine.debate?.commentatorModel != nil {
+            let isCommenting = { if case .commenting = engine.state { return true }; return false }()
+            let hasCommentary = !engine.commentaryText.isEmpty || hasAnyCommentary
+
+            if isCommenting || hasCommentary {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "mic.fill")
+                            .foregroundStyle(.orange)
+                            .font(.caption)
+
+                        Text("COMMENTARY")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.orange)
+                            .tracking(1.5)
+
+                        if let name = engine.debate?.commentatorModel?.shortName {
+                            Text(name)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
+                    }
+
+                    if isCommenting && !engine.commentaryText.isEmpty {
+                        Text(engine.commentaryText)
+                            .font(.callout)
+                            .italic()
+                            .foregroundStyle(.secondary)
+                            .lineSpacing(3)
+                    } else if let lastCommentary = latestCommentary {
+                        Text(lastCommentary)
+                            .font(.callout)
+                            .italic()
+                            .foregroundStyle(.tertiary)
+                            .lineSpacing(3)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(.orange.opacity(0.05))
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
+                .animation(.easeInOut(duration: 0.3), value: engine.state)
             }
         }
+    }
+
+    private var hasAnyCommentary: Bool {
+        engine.debate?.rounds.contains { $0.commentary != nil } ?? false
+    }
+
+    private var latestCommentary: String? {
+        engine.debate?.rounds.last(where: { $0.commentary != nil })?.commentary
     }
 
     // MARK: - Judge Area
@@ -266,8 +342,7 @@ struct DebateView: View {
     private var judgingView: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
-                ProgressView()
-                    .controlSize(.small)
+                DeliberationIndicator()
 
                 Text("Judge \(engine.debate?.judgeModel.shortName ?? "") is deliberating...")
                     .font(.caption)
@@ -290,11 +365,14 @@ struct DebateView: View {
                 Image(systemName: "trophy.fill")
                     .foregroundStyle(.yellow)
                     .font(.title2)
+                    .scaleEffect(verdictAppeared ? 1.0 : 0.5)
+                    .animation(.spring(response: 0.5, dampingFraction: 0.6), value: verdictAppeared)
 
                 Text("Winner: \(verdict.winner.shortName)")
                     .font(.title3)
                     .fontWeight(.bold)
             }
+            .onAppear { verdictAppeared = true }
 
             Text(verdict.reasoning)
                 .font(.callout)
@@ -303,7 +381,6 @@ struct DebateView: View {
                 .lineSpacing(3)
                 .textSelection(.enabled)
 
-            // Score summary
             HStack(spacing: 32) {
                 scoreColumn(
                     name: engine.debate?.modelA.shortName ?? "A",
@@ -329,12 +406,15 @@ struct DebateView: View {
             }
 
             Button("New Debate") {
+                verdictAppeared = false
                 engine.reset()
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.small)
         }
     }
+
+    @State private var verdictAppeared = false
 
     private func scoreColumn(name: String, accent: Color, scores: [(String, Int)]) -> some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -370,13 +450,13 @@ struct DebateView: View {
             Spacer()
 
             Button("Retry") {
-                // Re-start with same params
                 if let debate = engine.debate {
                     engine.startDebate(
                         topic: debate.topic,
                         modelA: debate.modelA,
                         modelB: debate.modelB,
-                        judgeModel: debate.judgeModel
+                        judgeModel: debate.judgeModel,
+                        commentatorModel: debate.commentatorModel
                     )
                 }
             }
@@ -404,11 +484,67 @@ struct DebateView: View {
     }
 
     private var currentRound: Int {
-        switch engine.state {
-        case .turnA(let r), .turnB(let r):
-            return r
-        default:
-            return (engine.debate?.rounds.count ?? 0) + 1
+        engine.state.currentRound ?? (engine.debate?.rounds.count ?? 0) + 1
+    }
+}
+
+// MARK: - Animated Components
+
+/// Continuously pulsing dot for status indicators.
+struct PulsingDot: View {
+    let color: Color
+    @State private var isAnimating = false
+
+    var body: some View {
+        Circle()
+            .fill(color)
+            .frame(width: 6, height: 6)
+            .opacity(isAnimating ? 1.0 : 0.3)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
+                    isAnimating = true
+                }
+            }
+    }
+}
+
+/// Three dots that animate sequentially for streaming state.
+struct StreamingDots: View {
+    let color: Color
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 0.15)) { timeline in
+            let phase = timeline.date.timeIntervalSinceReferenceDate
+            HStack(spacing: 3) {
+                ForEach(0..<3, id: \.self) { i in
+                    Circle()
+                        .fill(color)
+                        .frame(width: 4, height: 4)
+                        .opacity(dotOpacity(index: i, phase: phase))
+                }
+            }
         }
+    }
+
+    private func dotOpacity(index: Int, phase: Double) -> Double {
+        let wave = sin((phase * 4) + Double(index) * 0.8)
+        return 0.3 + (wave + 1) * 0.35
+    }
+}
+
+/// Animated scales icon for judge deliberation.
+struct DeliberationIndicator: View {
+    @State private var isAnimating = false
+
+    var body: some View {
+        Image(systemName: "scalemass.fill")
+            .foregroundStyle(.purple)
+            .font(.caption)
+            .rotationEffect(.degrees(isAnimating ? 5 : -5))
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true)) {
+                    isAnimating = true
+                }
+            }
     }
 }

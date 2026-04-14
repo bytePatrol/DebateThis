@@ -79,9 +79,19 @@ struct DebateEngineTests {
         #expect(!DebateState.idle.isActive)
         #expect(DebateState.turnA(round: 1).isActive)
         #expect(DebateState.turnB(round: 1).isActive)
+        #expect(DebateState.commenting(round: 1).isActive)
         #expect(DebateState.judging.isActive)
         #expect(!DebateState.complete.isActive)
         #expect(!DebateState.error(message: "x").isActive)
+    }
+
+    @Test("DebateState currentRound")
+    func stateCurrentRound() {
+        #expect(DebateState.idle.currentRound == nil)
+        #expect(DebateState.turnA(round: 2).currentRound == 2)
+        #expect(DebateState.turnB(round: 3).currentRound == 3)
+        #expect(DebateState.commenting(round: 1).currentRound == 1)
+        #expect(DebateState.judging.currentRound == nil)
     }
 }
 
@@ -130,6 +140,20 @@ struct SystemPromptsTests {
         #expect(prompt.contains("evidence="))
         #expect(prompt.contains("rhetoric="))
         #expect(prompt.contains("responsiveness="))
+    }
+
+    @Test("Commentator prompt includes round and topic")
+    func commentatorPromptContent() {
+        let transcript = [
+            TranscriptEntry(speaker: "A (FOR)", content: "for argument"),
+            TranscriptEntry(speaker: "B (AGAINST)", content: "against argument"),
+        ]
+        let prompt = SystemPrompts.commentator(topic: "test topic", round: 2, transcript: transcript)
+        #expect(prompt.contains("test topic"))
+        #expect(prompt.contains("Round 2"))
+        #expect(prompt.contains("for argument"))
+        #expect(prompt.contains("against argument"))
+        #expect(prompt.contains("color commentator"))
     }
 
     @Test("Empty transcript produces no transcript section")

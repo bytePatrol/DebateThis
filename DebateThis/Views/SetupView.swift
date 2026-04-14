@@ -7,6 +7,8 @@ struct SetupView: View {
     @State private var selectedModelA: String = "anthropic/claude-sonnet-4"
     @State private var selectedModelB: String = "openai/gpt-4o"
     @State private var selectedJudge: String = "google/gemini-2.5-pro"
+    @State private var selectedCommentator: String = "google/gemini-2.5-flash"
+    @State private var commentaryEnabled: Bool = true
     @State private var isValidating: Bool = false
     @State private var keyIsValid: Bool? = nil
 
@@ -23,15 +25,13 @@ struct SetupView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // API Key section
             apiKeySection
-
             Divider()
-
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     topicSection
                     modelSection
+                    commentarySection
                     startButton
                 }
                 .padding(24)
@@ -48,11 +48,15 @@ struct SetupView: View {
 
             SecureField("OpenRouter API Key", text: $apiKey)
                 .textFieldStyle(.roundedBorder)
-                .onChange(of: apiKey) { _, _ in
+                .onChange(of: apiKey) { _, newValue in
                     keyIsValid = nil
+                    if !newValue.isEmpty {
+                        engine.configure(apiKey: newValue)
+                        engine.fetchModels()
+                    }
                 }
 
-            if isValidating {
+            if engine.isLoadingModels {
                 ProgressView()
                     .controlSize(.small)
             } else if let valid = keyIsValid {
@@ -67,6 +71,12 @@ struct SetupView: View {
         }
         .padding(16)
         .background(.bar)
+        .onAppear {
+            if !apiKey.isEmpty {
+                engine.configure(apiKey: apiKey)
+                engine.fetchModels()
+            }
+        }
     }
 
     // MARK: - Topic
@@ -100,10 +110,20 @@ struct SetupView: View {
 
     private var modelSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("MODELS")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .tracking(1.5)
+            HStack {
+                Text("MODELS")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .tracking(1.5)
+
+                Spacer()
+
+                if engine.availableModels.count > AvailableModels.all.count {
+                    Text("\(engine.availableModels.count) models loaded from OpenRouter")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+            }
 
             HStack(spacing: 24) {
                 modelPicker(
@@ -138,15 +158,55 @@ struct SetupView: View {
         }
     }
 
+    // MARK: - Commentary
+
+    private var commentarySection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Toggle(isOn: $commentaryEnabled) {
+                HStack(spacing: 6) {
+                    Image(systemName: "mic.fill")
+                        .foregroundStyle(.orange)
+                    Text("Live Commentary")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                }
+            }
+            .toggleStyle(.switch)
+
+            if commentaryEnabled {
+                HStack(spacing: 8) {
+                    Text("Commentator:")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    modelPicker(
+                        title: "",
+                        accent: .orange,
+                        selection: $selectedCommentator
+                    )
+                }
+                .padding(.leading, 4)
+
+                Text("A third AI provides color commentary after each round, like a sports announcer.")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+        .padding(12)
+        .background(.orange.opacity(0.04), in: RoundedRectangle(cornerRadius: 8))
+    }
+
     private func modelPicker(title: String, accent: Color, selection: Binding<String>) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundStyle(accent)
+            if !title.isEmpty {
+                Text(title)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(accent)
+            }
 
             Picker("", selection: selection) {
-                ForEach(AvailableModels.all) { model in
+                ForEach(engine.availableModels) { model in
                     Text(model.shortName).tag(model.id)
                 }
             }
@@ -185,26 +245,33 @@ struct SetupView: View {
         guard !apiKey.isEmpty else { return }
         isValidating = true
         engine.configure(apiKey: apiKey)
-        // Simple validation: just check non-empty for now.
-        // Real validation would call OpenRouter, but that costs tokens.
         keyIsValid = true
         isValidating = false
+        engine.fetchModels()
     }
 
     private func startDebate() {
         engine.configure(apiKey: apiKey)
 
-        guard let modelA = AvailableModels.model(for: selectedModelA),
-              let modelB = AvailableModels.model(for: selectedModelB),
-              let judge = AvailableModels.model(for: selectedJudge) else {
+        let models = engine.availableModels
+        let findModel = { (id: String) -> ModelIdentifier? in
+            models.first { $0.id == id }
+        }
+
+        guard let modelA = findModel(selectedModelA),
+              let modelB = findModel(selectedModelB),
+              let judge = findModel(selectedJudge) else {
             return
         }
+
+        let commentator: ModelIdentifier? = commentaryEnabled ? findModel(selectedCommentator) : nil
 
         engine.startDebate(
             topic: topic,
             modelA: modelA,
             modelB: modelB,
-            judgeModel: judge
+            judgeModel: judge,
+            commentatorModel: commentator
         )
     }
 }
