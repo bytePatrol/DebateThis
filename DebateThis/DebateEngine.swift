@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 import OpenAI
+import SwiftData
 
 // MARK: - DebateEngine
 //
@@ -43,10 +44,16 @@ final class DebateEngine {
 
     // MARK: - Configuration
 
+    var commentaryPersonality: Double = 0.7
+
     var totalRounds: Int = 3 {
         didSet { totalRounds = max(1, min(totalRounds, maxRounds)) }
     }
     private let maxRounds = 10
+
+    // MARK: - Persistence
+
+    var modelContext: ModelContext?
 
     // MARK: - Private
 
@@ -264,7 +271,8 @@ final class DebateEngine {
                     systemPrompt: SystemPrompts.commentator(
                         topic: debate.topic,
                         round: round,
-                        transcript: roundTranscript
+                        transcript: roundTranscript,
+                        personality: commentaryPersonality
                     ),
                     userMessage: "Deliver your commentary on this round."
                 )
@@ -323,6 +331,18 @@ final class DebateEngine {
         }
 
         state = .complete
+
+        // Auto-save completed debate
+        if let debate = self.debate {
+            saveDebate(debate)
+        }
+    }
+
+    private func saveDebate(_ debate: Debate) {
+        guard let modelContext else { return }
+        let saved = SavedDebate(from: debate)
+        modelContext.insert(saved)
+        try? modelContext.save()
     }
 
     // MARK: - Streaming Helper

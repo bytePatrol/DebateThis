@@ -74,17 +74,39 @@ enum SystemPrompts {
         return prompt
     }
 
-    static func commentator(topic: String, round: Int, transcript: [TranscriptEntry]) -> String {
+    /// Commentary personality: 0.0 = dry academic analyst, 1.0 = excitable sports broadcaster
+    static func commentator(topic: String, round: Int, transcript: [TranscriptEntry], personality: Double = 0.7) -> String {
+        let style: String
+        if personality < 0.3 {
+            style = """
+            - Analytical and measured. Use precise language.
+            - Evaluate argument structure, logical validity, and evidence quality.
+            - Dry wit only. No exclamation marks.
+            - Brief: 2-3 sentences max.
+            """
+        } else if personality < 0.7 {
+            style = """
+            - Balanced analysis with personality. Clear and engaging.
+            - Name specific arguments and rhetorical moves.
+            - Opinionated but fair. Say who had the stronger round.
+            - Brief: 2-3 sentences max.
+            """
+        } else {
+            style = """
+            - Energetic sports-style color commentary!
+            - Use debate and sports metaphors. Be vivid and entertaining.
+            - Strongly opinionated. Call out knockdown arguments and weak recoveries.
+            - Brief: 2-3 sentences max. Punchy. High energy.
+            """
+        }
+
         var prompt = """
-        You are a sharp, witty sports-style color commentator for an AI debate. The topic is:
+        You are a color commentator for an AI debate. The topic is:
 
         "\(topic)"
 
-        This is Round \(round). Analyze what just happened like a play-by-play announcer. Be:
-        - Specific: name the exact arguments and rhetorical moves each side made
-        - Opinionated: say who had the stronger round and why
-        - Entertaining: use sports/debate metaphors, be energetic but not corny
-        - Brief: 2-3 sentences max. This is commentary, not an essay.
+        This is Round \(round). Your style:
+        \(style)
 
         Do not use phrases like "as an AI" or reference being a language model.
 

@@ -405,12 +405,22 @@ struct DebateView: View {
                 )
             }
 
-            Button("New Debate") {
-                verdictAppeared = false
-                engine.reset()
+            HStack(spacing: 12) {
+                Button("New Debate") {
+                    verdictAppeared = false
+                    engine.reset()
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+
+                if let transcript = buildShareTranscript() {
+                    ShareLink(item: transcript) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.small)
         }
     }
 
@@ -485,6 +495,35 @@ struct DebateView: View {
 
     private var currentRound: Int {
         engine.state.currentRound ?? (engine.debate?.rounds.count ?? 0) + 1
+    }
+
+    private func buildShareTranscript() -> String? {
+        guard let debate = engine.debate else { return nil }
+        var text = "DEBATE: \(debate.topic)\n"
+        text += "\(debate.modelA.shortName) (FOR) vs \(debate.modelB.shortName) (AGAINST)\n"
+        text += "Judge: \(debate.judgeModel.shortName)\n\n"
+
+        for round in debate.rounds {
+            text += "--- ROUND \(round.number) ---\n"
+            if let a = round.turnA {
+                text += "\n[\(debate.modelA.shortName) — FOR]\n\(a.content)\n"
+            }
+            if let b = round.turnB {
+                text += "\n[\(debate.modelB.shortName) — AGAINST]\n\(b.content)\n"
+            }
+            if let c = round.commentary {
+                text += "\n[Commentary] \(c)\n"
+            }
+            text += "\n"
+        }
+
+        if let verdict = debate.verdict {
+            text += "--- VERDICT ---\n"
+            text += "Winner: \(verdict.winner.shortName)\n"
+            text += verdict.reasoning + "\n"
+        }
+
+        return text
     }
 }
 
